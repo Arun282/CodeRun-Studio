@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020"><title>CodeRun Studio — Online Code Editor</title>
+<style>
+:root{--bg:#0b1020;--panel:#111a2e;--panel2:#0e1729;--line:#26344d;--text:#e8eefc;--muted:#9aa9c3;--blue:#6d8cff;--green:#38d9a9}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#18284a 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}
+header{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 4%;background:#0b1020dd;position:sticky;top:0;z-index:3;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:19px;letter-spacing:-.5px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#6686ff,#9b67f6);font-size:19px}.brand span em{font-style:normal;color:#8fa8ff}.status{font-size:12px;color:var(--green);display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;background:var(--green);border-radius:50%}
+main{max-width:1450px;margin:auto;padding:30px 24px 45px}.hero{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}.eyebrow{font-size:11px;color:#9eb0ff;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(25px,4vw,38px);letter-spacing:-1.3px;margin:5px 0}.hero p{color:var(--muted);margin:0}.pill{border:1px solid #344464;border-radius:99px;padding:8px 13px;color:#c8d4ed;font-size:12px;white-space:nowrap}
+.workspace{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:17px}.card{background:linear-gradient(180deg,#111b30,#0e1729);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 18px 50px #0002;min-width:0}.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);background:#ffffff03}.bar strong{font-size:13px}.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background:#16223a;color:var(--text);padding:9px 11px}select{max-width:180px}button{cursor:pointer;font-weight:700;font-size:12px;transition:.15s}button:hover{filter:brightness(1.15);transform:translateY(-1px)}.primary{background:linear-gradient(120deg,#6484ff,#8c68f4);border:0;color:white;padding:10px 17px}.subtle{background:transparent;color:#c4cee1}.editorarea{padding:14px}textarea{width:100%;height:390px;resize:vertical;background:#091120;color:#dce7ff;border:1px solid #24344f;border-radius:11px;padding:16px;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none;tab-size:2}textarea:focus{border-color:#718dff;box-shadow:0 0 0 3px #718dff20}.hint{color:var(--muted);font-size:11px;margin:9px 2px 0}.rightcol{display:flex;flex-direction:column;gap:17px}.previewcard{flex:1;min-height:275px}.previewframe{height:280px;background:#fff}.previewframe iframe{width:100%;height:100%;border:0;background:white}.output{min-height:165px;max-height:310px;overflow:auto;background:#080f1c;padding:14px 16px;color:#c6f6df;font:12px/1.7 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.output .placeholder{color:#72829d}.inputbox{width:100%;height:76px;resize:vertical;background:#091120;color:#dce7ff;border:1px solid #24344f;border-radius:9px;padding:10px;font:12px ui-monospace,monospace}.inputwrap{padding:0 14px 14px}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.feature{padding:15px;border:1px solid var(--line);border-radius:13px;background:#ffffff03}.feature b{display:block;font-size:13px;margin:5px 0}.feature p{color:var(--muted);font-size:12px;margin:0}.icon{font-size:19px}footer{text-align:center;color:#71809b;font-size:11px;padding:26px 0 0}.toast{color:#ffc977;font-size:12px;padding:10px 15px;display:none}
+@media(max-width:850px){.workspace{grid-template-columns:1fr}.hero{align-items:start;flex-direction:column}textarea{height:330px}.previewframe{height:250px}.features{grid-template-columns:1fr}.status{display:none}header{padding:0 18px}main{padding:23px 13px}.pill{white-space:normal}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">&lt;/&gt;</div><span>Code<em>Run</em> Studio</span></div><div class="status"><span class="dot"></span> Editor ready</div></header>
+<main>
+<section class="hero"><div><div class="eyebrow">Your browser-based playground</div><h1>Build. Run. <span style="color:#91a8ff">Create.</span></h1><p>Write code, test ideas, and see what happens — all in one place.</p></div><div class="pill">✦ Free online editor</div></section>
+<section class="workspace">
+<div class="card">
+<div class="bar"><strong>⌘ &nbsp; CODE EDITOR</strong><div class="controls"><select id="language" aria-label="Choose language"><option value="web">HTML + CSS + JS</option><option value="python">Python</option><option value="javascript">JavaScript (Node.js)</option><option value="c">C</option><option value="c++">C++</option><option value="java">Java</option><option value="php">PHP</option><option value="go">Go</option><option value="rust">Rust</option><option value="ruby">Ruby</option><option value="bash">Bash</option></select><button class="subtle" id="reset">Reset</button></div></div>
+<div class="editorarea"><textarea id="code" spellcheck="false" aria-label="Code editor"></textarea><div class="hint" id="hint">HTML/CSS/JS run directly in your browser. Press Run to refresh the preview.</div></div>
+<div class="bar"><span style="font-size:11px;color:var(--muted)">TIP: Use Tab to indent · Ctrl/⌘ + Enter to run</span><div class="controls"><button id="download" class="subtle">↓ Download</button><button id="run" class="primary">▶ Run Code</button></div></div><div id="toast" class="toast"></div>
+</div>
+<div class="rightcol">
+<div class="card previewcard"><div class="bar"><strong>▣ &nbsp; LIVE PREVIEW</strong><span style="font-size:11px;color:var(--muted)">Browser sandbox</span></div><div class="previewframe"><iframe id="preview" title="Live preview" sandbox="allow-scripts"></iframe></div></div>
+<div class="card"><div class="bar"><strong>⌁ &nbsp; OUTPUT CONSOLE</strong><button class="subtle" id="clear">Clear</button></div><div id="output" class="output"><span class="placeholder">Your program output will appear here…</span></div><div class="inputwrap" id="stdinwrap" hidden><label for="stdin" style="font-size:11px;color:var(--muted);display:block;margin-bottom:7px">Standard input (stdin)</label><textarea id="stdin" class="inputbox" placeholder="Optional input for your program"></textarea></div></div>
+</div>
+</section>
+<section class="features"><div class="feature"><span class="icon">⚡</span><b>Instant browser preview</b><p>Test HTML, CSS and JavaScript without installing software.</p></div><div class="feature"><span class="icon">⌘</span><b>Multi-language workspace</b><p>Python and compiled-language options in one clean editor.</p></div><div class="feature"><span class="icon">🔒</span><b>Execution safety</b><p>Remote language runs require a sandboxed execution service; never run unknown code on your own server.</p></div></section>
+<footer>CodeRun Studio · Made for curious minds</footer>
+</main>
+<script>
+const samples={
+web:'<!doctype html>\n<html>\n<head>\n<style>body{font-family:Arial;padding:24px;color:#172033}h1{color:#5b6ee1}button{padding:10px 16px;border:0;border-radius:8px;background:#5b6ee1;color:white;cursor:pointer}</style>\n</head>\n<body>\n<h1>Hello, CodeRun! 👋</h1>\n<p>Edit this HTML, CSS and JavaScript, then click Run Code.</p>\n<button onclick="document.querySelector(\'p\').textContent=\'It works! JavaScript is running.\'">Click me</button>\n</body>\n</html>',
+python:'print("Hello, CodeRun Studio!")\nname = "Developer"\nprint(f"Welcome, {name}!")\nprint(2 + 3)',
+javascript:'console.log("Hello, CodeRun Studio!");\nconsole.log("2 + 3 =", 2 + 3);',
+c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, CodeRun Studio!\\n");\n    return 0;\n}',
+'c++':'#include <iostream>\nint main() {\n    std::cout << "Hello, CodeRun Studio!" << std::endl;\n    return 0;\n}',
+java:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, CodeRun Studio!");\n    }\n}',
+php:'<?php\necho "Hello, CodeRun Studio!";\n?>',
+go:'package main\nimport "fmt"\nfunc main() { fmt.Println("Hello, CodeRun Studio!") }',
+rust:'fn main() {\n    println!("Hello, CodeRun Studio!");\n}',
+ruby:'puts "Hello, CodeRun Studio!"',
+bash:'echo "Hello, CodeRun Studio!"'
+};
+const lang=document.getElementById('language'),code=document.getElementById('code'),out=document.getElementById('output'),preview=document.getElementById('preview'),stdinwrap=document.getElementById('stdinwrap'),hint=document.getElementById('hint'),toast=document.getElementById('toast');
+function showOutput(s){out.textContent=s||'(No output)'}
+function selected(){return lang.value}
+function refreshMode(){let l=selected(),web=l==='web';stdinwrap.hidden=web;document.getElementById('run').textContent=web?'▶ Run & Preview':'▶ Run Code';hint.textContent=web?'HTML/CSS/JS run directly in your browser. Press Run to refresh the preview.':l==='python'?'Python runs in your browser using Pyodide (first load may take a moment).':'This language uses the configured remote sandbox service.';if(web){showOutput('Ready. Click Run Code to update the preview.');}else showOutput('Ready to run '+l+'.');}
+lang.addEventListener('change',()=>{code.value=samples[selected()]||'';refreshMode()});
+document.getElementById('run').addEventListener('click',runCode);
+async function runCode(){const l=selected(),src=code.value;document.getElementById('run').disabled=true;document.getElementById('run').textContent='Running…';try{
+if(l==='web'){const doc=src;preview.srcdoc=doc;showOutput('Preview updated. (Browser console output is not captured here.)');return;}
+if(l==='python'){showOutput('Loading Python runtime…');if(!window.loadPyodide){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js';s.onload=resolve;s.onerror=()=>reject(new Error('Could not load Python runtime. Check your internet connection.'));document.head.appendChild(s)});}window.pyodideInstance=window.pyodideInstance||await loadPyodide();let output='';window.pyodideInstance.setStdout({batched:s=>output+=s+'\n'});window.pyodideInstance.setStderr({batched:s=>output+=s+'\n'});try{await window.pyodideInstance.runPythonAsync(src);showOutput(output.trim()||'Program finished (no output).')}catch(e){showOutput((output?output+'\n':'')+String(e))}return;}
+showOutput('Sending code to the remote sandbox…');const res=await fetch('/api/execute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({language:l,code:src,stdin:document.getElementById('stdin').value})});const data=await res.json();if(!res.ok){showOutput(data.error||'Execution service error.');return;}let text='';if(data.compile?.output)text+='[Compile]\n'+data.compile.output+'\n';if(data.run?.output)text+=data.run.output;if(data.run?.code!==undefined&&data.run?.code!==null)text+='\n\nExit code: '+data.run.code;if(!text)text=data.message||'Finished (no output).';showOutput(text);
+}catch(e){showOutput('Error: '+e.message)}finally{document.getElementById('run').disabled=false;document.getElementById('run').textContent=l==='web'?'▶ Run & Preview':'▶ Run Code';}}
+document.getElementById('reset').addEventListener('click',()=>{code.value=samples[selected()]||'';showOutput('Editor reset to sample code.');if(selected()==='web')preview.srcdoc=code.value});
+document.getElementById('clear').addEventListener('click',()=>showOutput('Console cleared.'));
+document.getElementById('download').addEventListener('click',()=>{const ext={web:'html',python:'py',javascript:'js',c:'c','c++':'cpp',java:'java',php:'php',go:'go',rust:'rs',ruby:'rb',bash:'sh'}[selected()]||'txt';const blob=new Blob([code.value],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='main.'+ext;a.click();URL.revokeObjectURL(a.href)});
+code.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const a=code.selectionStart,b=code.selectionEnd;code.setRangeText('  ',a,b,'end')}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runCode()}});
+code.value=samples.web;refreshMode();preview.srcdoc=code.value;
+</script>
+</body></html>
