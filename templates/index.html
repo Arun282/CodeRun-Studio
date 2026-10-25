@@ -30,6 +30,23 @@ select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background
 </div>
 </section>
 <section class="features"><div class="feature"><span class="icon">⚡</span><b>Instant browser preview</b><p>Test HTML, CSS and JavaScript without installing software.</p></div><div class="feature"><span class="icon">⌘</span><b>Multi-language workspace</b><p>Python and compiled-language options in one clean editor.</p></div><div class="feature"><span class="icon">🔒</span><b>Execution safety</b><p>Remote language runs require a sandboxed execution service; never run unknown code on your own server.</p></div></section>
+<section class="card" id="hosting" style="margin-top:20px">
+ <div class="bar"><strong>☁️ &nbsp; HOST YOUR WEBSITE</strong><span style="font-size:11px;color:var(--muted)">Static HTML/CSS/JS</span></div>
+ <div style="padding:18px">
+  <p style="color:var(--muted);margin-top:0">Upload a ZIP containing <b>index.html</b> and its CSS/JS/assets. AK Hosting will create a shareable preview link.</p>
+  <form id="hostForm" class="controls" style="align-items:stretch">
+   <input id="siteZip" type="file" accept=".zip,application/zip" required style="max-width:100%;flex:1;color:var(--muted);padding:10px;border:1px solid var(--line);border-radius:9px">
+   <button class="primary" id="hostBtn" type="submit">Upload & Host</button>
+  </form>
+  <div id="hostResult" style="display:none;margin-top:14px;padding:14px;background:#091120;border:1px solid var(--line);border-radius:10px;overflow-wrap:anywhere"></div>
+ </div>
+ <div class="bar"><strong>📱 &nbsp; ANDROID APK PROJECT</strong><span style="font-size:11px;color:var(--muted)">WebView wrapper</span></div>
+ <div style="padding:18px">
+  <p style="color:var(--muted);margin-top:0">After hosting a site, generate an Android Studio project ZIP. The included GitHub Actions workflow can build a debug APK when the project is pushed to GitHub. This button does not directly compile an APK on Render.</p>
+  <div class="controls"><input id="appName" value="AK Hosting App" maxlength="40" aria-label="Android app name" style="flex:1;min-width:180px"><button id="apkBtn" class="primary" type="button" disabled>Generate Android Project ZIP</button></div>
+  <div id="apkResult" style="color:var(--muted);font-size:12px;margin-top:12px"></div>
+ </div>
+</section>
 <footer>© <span id="year"></span> AK Hosting · App & Website Hosting Platform</footer>
 </main>
 <script>
@@ -61,6 +78,39 @@ document.getElementById('reset').addEventListener('click',()=>{code.value=sample
 document.getElementById('clear').addEventListener('click',()=>showOutput('Console cleared.'));
 document.getElementById('download').addEventListener('click',()=>{const ext={web:'html',python:'py',javascript:'js',c:'c','c++':'cpp',java:'java',php:'php',go:'go',rust:'rs',ruby:'rb',bash:'sh'}[selected()]||'txt';const blob=new Blob([code.value],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='main.'+ext;a.click();URL.revokeObjectURL(a.href)});
 code.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const a=code.selectionStart,b=code.selectionEnd;code.setRangeText('  ',a,b,'end')}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runCode()}});
-document.getElementById('year').textContent=new Date().getFullYear();code.value=samples.web;refreshMode();preview.srcdoc=code.value;
+document.getElementById('year').textContent=new Date().getFullYear();
+let hostedSiteId = null;
+document.getElementById('hostForm').addEventListener('submit', async e => {
+ e.preventDefault();
+ const file = document.getElementById('siteZip').files[0];
+ if (!file) return;
+ const btn = document.getElementById('hostBtn'), result = document.getElementById('hostResult');
+ btn.disabled = true; btn.textContent = 'Uploading…'; result.style.display = 'block'; result.textContent = 'Uploading and validating ZIP…';
+ try {
+  const form = new FormData(); form.append('site_zip', file);
+  const res = await fetch('/api/sites', {method:'POST', body:form});
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Upload failed.');
+  hostedSiteId = data.site_id;
+  result.innerHTML = '<b style="color:#38d9a9">Website hosted (temporary storage)</b><p>Link: <a target="_blank" rel="noopener" style="color:#9eb0ff" href="'+data.url+'">'+data.url+'</a></p><p style="color:#9aa9c3;font-size:12px">Files accepted: '+data.files+'. This Render demo stores uploads temporarily; redeploy/restart may erase them.</p>';
+  document.getElementById('apkBtn').disabled = false;
+  document.getElementById('apkResult').textContent = 'Now enter an app name and generate the Android project ZIP.';
+ } catch(err) { result.textContent = 'Error: ' + err.message; }
+ finally { btn.disabled = false; btn.textContent = 'Upload & Host'; }
+});
+document.getElementById('apkBtn').addEventListener('click', async () => {
+ if (!hostedSiteId) return;
+ const btn = document.getElementById('apkBtn'), result = document.getElementById('apkResult');
+ btn.disabled = true; btn.textContent = 'Preparing ZIP…';
+ try {
+  const res = await fetch('/api/apk-project', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({site_id:hostedSiteId,app_name:document.getElementById('appName').value})});
+  if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Could not create project.'); }
+  const blob = await res.blob(), url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = 'AKHostingAndroidProject.zip'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  result.textContent = 'Project ZIP downloaded. Import it into GitHub/Android Studio; GitHub Actions workflow builds the debug APK artifact.';
+ } catch(err) { result.textContent = 'Error: ' + err.message; }
+ finally { btn.disabled = false; btn.textContent = 'Generate Android Project ZIP'; }
+});
+code.value=samples.web;refreshMode();preview.srcdoc=code.value;
 </script>
 </body></html>
