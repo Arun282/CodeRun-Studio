@@ -1,15 +1,22 @@
 import io
 import os
 import re
+import sqlite3
+import secrets
 import uuid
 import zipfile
 from pathlib import Path, PurePosixPath
 
 import requests
-from flask import Flask, jsonify, render_template, request, send_file, send_from_directory, abort
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, jsonify, render_template, request, send_file, send_from_directory, abort, session
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 12 * 1024 * 1024
+app.secret_key = os.getenv("SECRET_KEY", secrets.token_hex(32))
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = os.getenv("RENDER", "") == "true"
 
 ROOT = Path(os.getenv("AKHOSTING_STORAGE", "/tmp/akhosting-sites"))
 ROOT.mkdir(parents=True, exist_ok=True)
@@ -17,11 +24,77 @@ PISTON_BASE = os.getenv("PISTON_API_URL", "https://emkc.org/api/v2/piston").rstr
 PISTON_API_KEY = os.getenv("PISTON_API_KEY", "")
 MAX_FILES = 500
 MAX_UNPACKED = 30 * 1024 * 1024
+DB_PATH = os.getenv("DATABASE_PATH", "/tmp/akhosting.db")
+def db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+with db() as conn:
+    conn.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, created_at TEXT DEFAULT CURRENT_TIMESTAMP)")
+    conn.execute("CREATE TABLE IF NOT EXISTS projects (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, site_id TEXT UNIQUE NOT NULL, name TEXT NOT NULL, slug TEXT UNIQUE NOT NULL, files_count INTEGER NOT NULL DEFAULT 0, created_at TEXT DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user_id) REFERENCES users(id))")
+
+def current_user():
+    uid = session.get("user_id")
+    if not uid: return None
+    with db() as conn:
+        row = conn.execute("SELECT id,email FROM users WHERE id=?", (uid,)).fetchone()
+        return dict(row) if row else None
+
+def slugify(value):
+    value = re.sub(r"[^a-z0-9-]", "-", value.lower().strip())
+    value = re.sub(r"-+", "-", value).strip("-")[:40]
+    return value
 ALLOWED_EXTS = {".html", ".htm", ".css", ".js", ".mjs", ".json", ".txt", ".svg", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".woff", ".woff2", ".ttf", ".mp4", ".webm", ".pdf"}
 
 @app.get("/")
 def home():
-    return render_template("index.html")
+    return render_template("index.html", user=current_user())
+
+@app.get("/api/me")
+def api_me():
+    user = current_user()
+    if not user: return jsonify({"user": None, "projects": []})
+    with db() as conn:
+        rows = conn.execute("SELECT id,name,slug,site_id,files_count,created_at FROM projects WHERE user_id=? ORDER BY id DESC", (user["id"],)).fetchall()
+    base = request.url_root.rstrip("/")
+    return jsonify({"user": user, "projects": [dict(r, url=f"{base}/p/{r['slug']}") for r in rows]})
+
+@app.post("/api/register")
+def register():
+    data = request.get_json(silent=True) or {}
+    email = str(data.get("email", "")).strip().lower()
+    password = str(data.get("password", ""))
+    if not re.fullmatch(r"[^@\\s]+@[^@\\s]+\\.[^@\\s]+", email) or len(email) > 200:
+        return jsonify({"error": "Enter a valid email address."}), 400
+    if len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters."}), 400
+    try:
+        with db() as conn:
+            cur = conn.execute("INSERT INTO users(email,password_hash) VALUES(?,?)", (email, generate_password_hash(password)))
+            session.clear()
+            session["user_id"] = cur.lastrowid
+        return jsonify({"ok": True, "email": email})
+    except sqlite3.IntegrityError:
+        return jsonify({"error": "An account with this email already exists. Please sign in."}), 409
+
+@app.post("/api/login")
+def login():
+    data = request.get_json(silent=True) or {}
+    email = str(data.get("email", "")).strip().lower()
+    password = str(data.get("password", ""))
+    with db() as conn:
+        row = conn.execute("SELECT id,password_hash FROM users WHERE email=?", (email,)).fetchone()
+    if not row or not check_password_hash(row["password_hash"], password):
+        return jsonify({"error": "Email or password is incorrect."}), 401
+    session.clear()
+    session["user_id"] = row["id"]
+    return jsonify({"ok": True, "email": email})
+
+@app.post("/api/logout")
+def logout():
+    session.clear()
+    return jsonify({"ok": True})
 
 @app.get("/health")
 def health():
@@ -129,15 +202,45 @@ def safe_extract_site(upload):
 
 @app.post("/api/sites")
 def upload_site():
+    user = current_user()
+    if not user: return jsonify({"error": "Please sign in or create an account before hosting a website."}), 401
     file = request.files.get("site_zip")
     if not file or not file.filename.lower().endswith(".zip"):
         return jsonify({"error": "Choose a ZIP file containing your static website."}), 400
     try:
         site_id, count = safe_extract_site(file.stream)
         base = request.url_root.rstrip("/")
-        return jsonify({"ok": True, "site_id": site_id, "files": count, "url": f"{base}/sites/{site_id}/index.html"})
+        requested_name = str(request.form.get("site_name", "my-website")).strip()[:60]
+        base_slug = slugify(request.form.get("slug", requested_name)) or "my-website"
+        slug = base_slug
+        with db() as conn:
+            suffix = 2
+            while conn.execute("SELECT 1 FROM projects WHERE slug=?", (slug,)).fetchone():
+                slug = f"{base_slug[:35]}-{suffix}"
+                suffix += 1
+            conn.execute("INSERT INTO projects(user_id,site_id,name,slug,files_count) VALUES(?,?,?,?,?)", (user["id"], site_id, requested_name or slug, slug, count))
+        return jsonify({"ok": True, "site_id": site_id, "slug": slug, "files": count, "url": f"{base}/p/{slug}"})
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
+
+@app.get("/p/<slug>")
+def hosted_site_home(slug):
+    with db() as conn:
+        row = conn.execute("SELECT site_id FROM projects WHERE slug=?", (slug,)).fetchone()
+    if not row: abort(404)
+    return hosted_site(row["site_id"], "index.html")
+
+@app.get("/api/projects/<int:project_id>", methods=["DELETE"])
+def delete_project(project_id):
+    user = current_user()
+    if not user: return jsonify({"error": "Please sign in."}), 401
+    with db() as conn:
+        row = conn.execute("SELECT site_id FROM projects WHERE id=? AND user_id=?", (project_id, user["id"])).fetchone()
+        if not row: return jsonify({"error": "Project not found."}), 404
+        conn.execute("DELETE FROM projects WHERE id=? AND user_id=?", (project_id, user["id"]))
+    import shutil
+    shutil.rmtree(ROOT / row["site_id"], ignore_errors=True)
+    return jsonify({"ok": True})
 
 @app.get("/sites/<site_id>/<path:filename>")
 def hosted_site(site_id, filename):
@@ -219,11 +322,15 @@ jobs:
 
 @app.post("/api/apk-project")
 def apk_project():
+    user = current_user()
+    if not user: return jsonify({"error": "Please sign in first."}), 401
     data = request.get_json(silent=True) or {}
     site_id = str(data.get("site_id", ""))
     app_name = str(data.get("app_name", "AK Hosting App"))
-    if not re.fullmatch(r"[a-f0-9]{10}", site_id) or not (ROOT / site_id / "index.html").is_file():
-        return jsonify({"error": "Upload and host a website first."}), 400
+    with db() as conn:
+        owned = conn.execute("SELECT 1 FROM projects WHERE user_id=? AND site_id=?", (user["id"], site_id)).fetchone()
+    if not owned or not re.fullmatch(r"[a-f0-9]{10}", site_id) or not (ROOT / site_id / "index.html").is_file():
+        return jsonify({"error": "Choose one of your hosted websites first."}), 400
     if len(app_name) > 40:
         return jsonify({"error": "App name must be 40 characters or less."}), 400
     package = make_android_project(site_id, app_name)
