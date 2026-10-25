@@ -54,6 +54,15 @@ select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background
    <button class="primary" id="hostBtn" type="submit">Upload & Host</button>
   </form>
   <div id="hostResult" style="display:none;margin-top:14px;padding:14px;background:#091120;border:1px solid var(--line);border-radius:10px;overflow-wrap:anywhere"></div>
+  <div style="height:1px;background:var(--line);margin:20px 0"></div>
+  <h3 style="font-size:15px;margin:0 0 6px">↗ Deploy from GitHub</h3>
+  <p style="color:var(--muted);font-size:12px;margin:0 0 12px">Like a simple GitHub + Render workflow: import a public repository and publish its static website here. Your repository stays on GitHub; this makes a hosted copy. The repo must contain index.html. Private repos and backend builds are not supported yet.</p>
+  <form id="repoImportForm" class="controls" style="align-items:stretch">
+   <input id="repoUrl" type="url" placeholder="https://github.com/owner/repository" required style="flex:2;min-width:220px;padding:10px;border:1px solid var(--line);border-radius:9px;background:#091120;color:var(--text)">
+   <input id="repoBranch" type="text" value="main" maxlength="100" placeholder="Branch (main)" required style="flex:1;min-width:100px;padding:10px;border:1px solid var(--line);border-radius:9px;background:#091120;color:var(--text)">
+   <button class="primary" id="repoDeployBtn" type="submit">Import & Deploy</button>
+  </form>
+  <div id="repoResult" style="display:none;margin-top:14px;padding:14px;background:#091120;border:1px solid var(--line);border-radius:10px;overflow-wrap:anywhere"></div>
  </div>
  <div class="bar"><strong>📱 &nbsp; ANDROID APK PROJECT</strong><span style="font-size:11px;color:var(--muted)">WebView wrapper</span></div>
  <div style="padding:18px">
@@ -133,6 +142,9 @@ async function loadAccount(){
   document.getElementById('siteZip').disabled=!logged;
   document.getElementById('siteName').disabled=!logged;
   document.getElementById('siteSlug').disabled=!logged;
+  document.getElementById('repoUrl').disabled=!logged;
+  document.getElementById('repoBranch').disabled=!logged;
+  document.getElementById('repoDeployBtn').disabled=!logged;
  }catch(e){document.getElementById('authMessage').textContent=e.message;}
 }
 async function authSubmit(formId, endpoint, emailId, passwordId){
@@ -161,6 +173,17 @@ document.getElementById('hostForm').addEventListener('submit', async e => {
   await loadAccount();document.getElementById('apkSite').value=hostedSiteId;
  }catch(err){result.textContent='Error: '+err.message;}
  finally{btn.disabled=false;btn.textContent='Upload & Host';}
+});
+document.getElementById('repoImportForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const btn=document.getElementById('repoDeployBtn'),result=document.getElementById('repoResult');
+ btn.disabled=true;btn.textContent='Importing…';result.style.display='block';result.textContent='Downloading the public repository and checking for index.html…';
+ try{
+  const data=await apiJson('/api/import-github',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repo_url:document.getElementById('repoUrl').value,branch:document.getElementById('repoBranch').value})});
+  result.innerHTML='<b style="color:#38d9a9">Deployment successful</b><p>Website: <a target="_blank" rel="noopener" style="color:#9eb0ff" href="'+escapeHtml(data.url)+'">'+escapeHtml(data.url)+'</a></p><p style="color:#9aa9c3;font-size:12px">Imported '+data.files+' supported files from GitHub. This is a static-site deployment; it does not run backend code or automatically sync future commits.</p>';
+  document.getElementById('repoUrl').value='';await loadAccount();document.getElementById('apkSite').value=data.site_id;
+ }catch(err){result.textContent='Import failed: '+err.message;}
+ finally{btn.disabled=false;btn.textContent='Import & Deploy';}
 });
 document.getElementById('apkSite').addEventListener('change',e=>{hostedSiteId=e.target.value||null;document.getElementById('apkBtn').disabled=!hostedSiteId;});
 document.getElementById('apkBtn').addEventListener('click',async()=>{
