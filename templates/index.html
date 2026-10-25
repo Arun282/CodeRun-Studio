@@ -30,20 +30,35 @@ select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background
 </div>
 </section>
 <section class="features"><div class="feature"><span class="icon">⚡</span><b>Instant browser preview</b><p>Test HTML, CSS and JavaScript without installing software.</p></div><div class="feature"><span class="icon">⌘</span><b>Multi-language workspace</b><p>Python and compiled-language options in one clean editor.</p></div><div class="feature"><span class="icon">🔒</span><b>Execution safety</b><p>Remote language runs require a sandboxed execution service; never run unknown code on your own server.</p></div></section>
+
+<section class="card" id="account" style="margin-top:20px">
+ <div class="bar"><strong>👤 &nbsp; CUSTOMER ACCOUNT</strong><span id="accountState" style="font-size:11px;color:var(--muted)">Sign in to manage your projects</span></div>
+ <div style="padding:18px">
+  <div id="authForms" class="workspace" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+   <form id="loginForm" class="feature" style="display:grid;gap:10px"><b>Sign in</b><input id="loginEmail" type="email" autocomplete="email" placeholder="Email address" required style="padding:11px;border-radius:9px;border:1px solid var(--line);background:#091120;color:var(--text)"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password" required style="padding:11px;border-radius:9px;border:1px solid var(--line);background:#091120;color:var(--text)"><button class="primary" type="submit">Sign in</button></form>
+   <form id="registerForm" class="feature" style="display:grid;gap:10px"><b>Create account</b><input id="registerEmail" type="email" autocomplete="email" placeholder="Email address" required style="padding:11px;border-radius:9px;border:1px solid var(--line);background:#091120;color:var(--text)"><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" placeholder="Password (8+ characters)" required style="padding:11px;border-radius:9px;border:1px solid var(--line);background:#091120;color:var(--text)"><button class="primary" type="submit">Create account</button></form>
+  </div>
+  <div id="authMessage" style="margin-top:12px;color:#ffc977;font-size:12px" role="status"></div>
+  <div id="dashboard" hidden style="margin-top:12px">
+   <div class="controls" style="justify-content:space-between"><b>My websites & apps</b><button class="subtle" id="logoutBtn" type="button">Sign out</button></div>
+   <div id="projectList" style="display:grid;gap:10px;margin-top:12px"></div>
+  </div>
+ </div>
+</section>
 <section class="card" id="hosting" style="margin-top:20px">
  <div class="bar"><strong>☁️ &nbsp; HOST YOUR WEBSITE</strong><span style="font-size:11px;color:var(--muted)">Static HTML/CSS/JS</span></div>
  <div style="padding:18px">
-  <p style="color:var(--muted);margin-top:0">Upload a ZIP containing <b>index.html</b> and its CSS/JS/assets. AK Hosting will create a shareable preview link.</p>
+  <p style="color:var(--muted);margin-top:0">Sign in, then upload a ZIP containing <b>index.html</b> and its CSS/JS/assets. Choose a project name and URL slug.</p>
   <form id="hostForm" class="controls" style="align-items:stretch">
-   <input id="siteZip" type="file" accept=".zip,application/zip" required style="max-width:100%;flex:1;color:var(--muted);padding:10px;border:1px solid var(--line);border-radius:9px">
+   <input id="siteName" type="text" maxlength="60" placeholder="Website / project name" required style="flex:1;min-width:170px;padding:10px;border:1px solid var(--line);border-radius:9px;background:#091120;color:var(--text)"><input id="siteSlug" type="text" maxlength="40" placeholder="your-link-name" pattern="[A-Za-z0-9-]+" style="flex:1;min-width:150px;padding:10px;border:1px solid var(--line);border-radius:9px;background:#091120;color:var(--text)"><input id="siteZip" type="file" accept=".zip,application/zip" required style="max-width:100%;flex:1;color:var(--muted);padding:10px;border:1px solid var(--line);border-radius:9px">
    <button class="primary" id="hostBtn" type="submit">Upload & Host</button>
   </form>
   <div id="hostResult" style="display:none;margin-top:14px;padding:14px;background:#091120;border:1px solid var(--line);border-radius:10px;overflow-wrap:anywhere"></div>
  </div>
  <div class="bar"><strong>📱 &nbsp; ANDROID APK PROJECT</strong><span style="font-size:11px;color:var(--muted)">WebView wrapper</span></div>
  <div style="padding:18px">
-  <p style="color:var(--muted);margin-top:0">After hosting a site, generate an Android Studio project ZIP. The included GitHub Actions workflow can build a debug APK when the project is pushed to GitHub. This button does not directly compile an APK on Render.</p>
-  <div class="controls"><input id="appName" value="AK Hosting App" maxlength="40" aria-label="Android app name" style="flex:1;min-width:180px"><button id="apkBtn" class="primary" type="button" disabled>Generate Android Project ZIP</button></div>
+  <p style="color:var(--muted);margin-top:0">Sign in and host a website first. Select one of your projects below to generate an Android Studio project ZIP. GitHub Actions can then build a debug APK. This does not directly compile an APK on Render.</p>
+  <div class="controls"><select id="apkSite" aria-label="Choose hosted website" style="flex:1;min-width:180px"><option value="">Choose a hosted website</option></select><input id="appName" value="AK Hosting App" maxlength="40" aria-label="Android app name" style="flex:1;min-width:180px"><button id="apkBtn" class="primary" type="button" disabled>Generate Android Project ZIP</button></div>
   <div id="apkResult" style="color:var(--muted);font-size:12px;margin-top:12px"></div>
  </div>
 </section>
@@ -79,37 +94,87 @@ document.getElementById('clear').addEventListener('click',()=>showOutput('Consol
 document.getElementById('download').addEventListener('click',()=>{const ext={web:'html',python:'py',javascript:'js',c:'c','c++':'cpp',java:'java',php:'php',go:'go',rust:'rs',ruby:'rb',bash:'sh'}[selected()]||'txt';const blob=new Blob([code.value],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='main.'+ext;a.click();URL.revokeObjectURL(a.href)});
 code.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const a=code.selectionStart,b=code.selectionEnd;code.setRangeText('  ',a,b,'end')}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runCode()}});
 document.getElementById('year').textContent=new Date().getFullYear();
+
 let hostedSiteId = null;
+let currentProjects = [];
+async function apiJson(url, options={}) {
+ const res = await fetch(url, options);
+ const data = await res.json().catch(()=>({error:'Unexpected server response.'}));
+ if (!res.ok) throw new Error(data.error || 'Request failed.');
+ return data;
+}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderProjects(projects) {
+ currentProjects = projects;
+ const list = document.getElementById('projectList'), select = document.getElementById('apkSite');
+ list.innerHTML = ''; select.innerHTML = '<option value="">Choose a hosted website</option>';
+ projects.forEach(p => {
+  const card = document.createElement('div'); card.className='feature';
+  card.innerHTML='<b>'+escapeHtml(p.name)+'</b><p><a style="color:#9eb0ff;overflow-wrap:anywhere" target="_blank" rel="noopener" href="'+escapeHtml(p.url)+'">'+escapeHtml(p.url)+'</a></p><p style="margin:5px 0">Files: '+p.files_count+' · Slug: '+escapeHtml(p.slug)+'</p><button class="subtle" data-delete="'+p.id+'" type="button">Delete project</button>';
+  list.appendChild(card);
+  const opt=document.createElement('option');opt.value=p.site_id;opt.textContent=p.name+' ('+p.slug+')';select.appendChild(opt);
+ });
+ document.getElementById('apkBtn').disabled = !projects.length;
+ list.querySelectorAll('[data-delete]').forEach(btn=>btn.addEventListener('click',async()=>{
+  if(!confirm('Delete this hosted project?'))return;
+  try{await apiJson('/api/projects/'+btn.dataset.delete,{method:'DELETE'});await loadAccount();}catch(e){document.getElementById('authMessage').textContent=e.message;}
+ }));
+}
+async function loadAccount(){
+ try{
+  const data=await apiJson('/api/me');
+  const logged=!!data.user;
+  document.getElementById('authForms').hidden=logged;
+  document.getElementById('dashboard').hidden=!logged;
+  document.getElementById('accountState').textContent=logged?'Signed in as '+data.user.email:'Sign in to manage your projects';
+  document.getElementById('authMessage').textContent='';
+  renderProjects(data.projects||[]);
+  document.getElementById('hostBtn').disabled=!logged;
+  document.getElementById('siteZip').disabled=!logged;
+  document.getElementById('siteName').disabled=!logged;
+  document.getElementById('siteSlug').disabled=!logged;
+ }catch(e){document.getElementById('authMessage').textContent=e.message;}
+}
+async function authSubmit(formId, endpoint, emailId, passwordId){
+ document.getElementById(formId).addEventListener('submit',async e=>{
+  e.preventDefault();const msg=document.getElementById('authMessage');msg.textContent='Please wait…';
+  try{const data=await apiJson(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById(emailId).value,password:document.getElementById(passwordId).value})});msg.textContent='Welcome '+data.email;await loadAccount();}
+  catch(err){msg.textContent=err.message;}
+ });
+}
+authSubmit('loginForm','/api/login','loginEmail','loginPassword');
+authSubmit('registerForm','/api/register','registerEmail','registerPassword');
+document.getElementById('logoutBtn').addEventListener('click',async()=>{try{await apiJson('/api/logout',{method:'POST'});await loadAccount();}catch(e){document.getElementById('authMessage').textContent=e.message;}});
+document.getElementById('siteName').addEventListener('input',()=>{const slug=document.getElementById('siteSlug');if(!slug.dataset.edited)slug.value=document.getElementById('siteName').value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);});
+document.getElementById('siteSlug').addEventListener('input',e=>{e.target.dataset.edited='1';e.target.value=e.target.value.toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40);});
 document.getElementById('hostForm').addEventListener('submit', async e => {
  e.preventDefault();
  const file = document.getElementById('siteZip').files[0];
  if (!file) return;
- const btn = document.getElementById('hostBtn'), result = document.getElementById('hostResult');
- btn.disabled = true; btn.textContent = 'Uploading…'; result.style.display = 'block'; result.textContent = 'Uploading and validating ZIP…';
- try {
-  const form = new FormData(); form.append('site_zip', file);
-  const res = await fetch('/api/sites', {method:'POST', body:form});
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Upload failed.');
-  hostedSiteId = data.site_id;
-  result.innerHTML = '<b style="color:#38d9a9">Website hosted (temporary storage)</b><p>Link: <a target="_blank" rel="noopener" style="color:#9eb0ff" href="'+data.url+'">'+data.url+'</a></p><p style="color:#9aa9c3;font-size:12px">Files accepted: '+data.files+'. This Render demo stores uploads temporarily; redeploy/restart may erase them.</p>';
-  document.getElementById('apkBtn').disabled = false;
-  document.getElementById('apkResult').textContent = 'Now enter an app name and generate the Android project ZIP.';
- } catch(err) { result.textContent = 'Error: ' + err.message; }
- finally { btn.disabled = false; btn.textContent = 'Upload & Host'; }
+ const btn=document.getElementById('hostBtn'), result=document.getElementById('hostResult');
+ btn.disabled=true;btn.textContent='Uploading…';result.style.display='block';result.textContent='Uploading and validating ZIP…';
+ try{
+  const form=new FormData();form.append('site_zip',file);form.append('site_name',document.getElementById('siteName').value);form.append('slug',document.getElementById('siteSlug').value||document.getElementById('siteName').value);
+  const data=await apiJson('/api/sites',{method:'POST',body:form});hostedSiteId=data.site_id;
+  result.innerHTML='<b style="color:#38d9a9">Website uploaded!</b><p>Project link: <a target="_blank" rel="noopener" style="color:#9eb0ff" href="'+escapeHtml(data.url)+'">'+escapeHtml(data.url)+'</a></p><p style="color:#9aa9c3;font-size:12px">Files: '+data.files+'. This demo uses temporary Render storage unless a persistent disk is configured.</p>';
+  document.getElementById('siteName').value='';document.getElementById('siteSlug').value='';document.getElementById('siteSlug').dataset.edited='';
+  await loadAccount();document.getElementById('apkSite').value=hostedSiteId;
+ }catch(err){result.textContent='Error: '+err.message;}
+ finally{btn.disabled=false;btn.textContent='Upload & Host';}
 });
-document.getElementById('apkBtn').addEventListener('click', async () => {
- if (!hostedSiteId) return;
- const btn = document.getElementById('apkBtn'), result = document.getElementById('apkResult');
- btn.disabled = true; btn.textContent = 'Preparing ZIP…';
- try {
-  const res = await fetch('/api/apk-project', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({site_id:hostedSiteId,app_name:document.getElementById('appName').value})});
-  if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Could not create project.'); }
-  const blob = await res.blob(), url = URL.createObjectURL(blob), a = document.createElement('a');
-  a.href = url; a.download = 'AKHostingAndroidProject.zip'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  result.textContent = 'Project ZIP downloaded. Import it into GitHub/Android Studio; GitHub Actions workflow builds the debug APK artifact.';
- } catch(err) { result.textContent = 'Error: ' + err.message; }
- finally { btn.disabled = false; btn.textContent = 'Generate Android Project ZIP'; }
+document.getElementById('apkSite').addEventListener('change',e=>{hostedSiteId=e.target.value||null;document.getElementById('apkBtn').disabled=!hostedSiteId;});
+document.getElementById('apkBtn').addEventListener('click',async()=>{
+ const siteId=document.getElementById('apkSite').value;
+ if(!siteId)return;
+ const btn=document.getElementById('apkBtn'),result=document.getElementById('apkResult');
+ btn.disabled=true;btn.textContent='Preparing ZIP…';
+ try{
+  const res=await fetch('/api/apk-project',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({site_id:siteId,app_name:document.getElementById('appName').value})});
+  if(!res.ok){const d=await res.json();throw new Error(d.error||'Could not create project.');}
+  const blob=await res.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='AKHostingAndroidProject.zip';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  result.textContent='Project ZIP downloaded. Upload it to a GitHub repository; GitHub Actions builds the debug APK artifact.';
+ }catch(err){result.textContent='Error: '+err.message;}
+ finally{btn.disabled=false;btn.textContent='Generate Android Project ZIP';}
 });
 code.value=samples.web;refreshMode();preview.srcdoc=code.value;
 </script>
