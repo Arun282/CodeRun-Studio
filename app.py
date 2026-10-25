@@ -223,6 +223,52 @@ def upload_site():
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
 
+@app.post("/api/import-github")
+def import_github():
+    user = current_user()
+    if not user:
+        return jsonify({"error": "Please sign in before importing a repository."}), 401
+    data = request.get_json(silent=True) or {}
+    repo_url = str(data.get("repo_url", "")).strip()
+    branch = str(data.get("branch", "main")).strip()
+    match = re.fullmatch(r"https?://github\\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\\.git)?/?", repo_url)
+    if not match:
+        return jsonify({"error": "Enter a public GitHub repository URL, for example https://github.com/owner/repo"}), 400
+    owner, repo = match.group(1), match.group(2)
+    if not re.fullmatch(r"[A-Za-z0-9_.-]{1,100}", branch):
+        return jsonify({"error": "Invalid branch name."}), 400
+    zip_url = f"https://codeload.github.com/{owner}/{repo}/zip/refs/heads/{branch}"
+    try:
+        response = requests.get(zip_url, timeout=20, stream=True, headers={"User-Agent": "AKHosting-Repo-Importer"})
+        if response.status_code != 200:
+            return jsonify({"error": "Could not download this branch. Check the repository URL, branch name, and public access."}), 400
+        buf = io.BytesIO()
+        size = 0
+        for chunk in response.iter_content(65536):
+            size += len(chunk)
+            if size > 12 * 1024 * 1024:
+                return jsonify({"error": "Repository ZIP is larger than 12 MB. Use a smaller static website ZIP."}), 413
+            buf.write(chunk)
+        buf.seek(0)
+        site_id, count = safe_extract_site(buf)
+        requested_name = str(data.get("site_name", repo)).strip()[:60] or repo
+        base_slug = slugify(data.get("slug", requested_name)) or "github-site"
+        slug = base_slug
+        with db() as conn:
+            suffix = 2
+            while conn.execute("SELECT 1 FROM projects WHERE slug=?", (slug,)).fetchone():
+                slug = f"{base_slug[:35]}-{suffix}"
+                suffix += 1
+            conn.execute("INSERT INTO projects(user_id,site_id,name,slug,files_count) VALUES(?,?,?,?,?)",
+                         (user["id"], site_id, requested_name, slug, count))
+        base = request.url_root.rstrip("/")
+        return jsonify({"ok": True, "site_id": site_id, "slug": slug, "files": count,
+                        "url": f"{base}/p/{slug}", "source": "GitHub"})
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except requests.RequestException:
+        return jsonify({"error": "GitHub download failed. Please try again."}), 502
+
 @app.get("/p/<slug>")
 def hosted_site_home(slug):
     with db() as conn:
@@ -230,7 +276,7 @@ def hosted_site_home(slug):
     if not row: abort(404)
     return hosted_site(row["site_id"], "index.html")
 
-@app.get("/api/projects/<int:project_id>", methods=["DELETE"])
+@app.route("/api/projects/<int:project_id>", methods=["DELETE"])
 def delete_project(project_id):
     user = current_user()
     if not user: return jsonify({"error": "Please sign in."}), 401
