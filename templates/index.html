@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1020"><title>CodeRun Studio — Online Code Editor</title>
+<meta name="theme-color" content="#0b1020"><title>AK Hosting — App & Website Hosting</title>
 <style>
 :root{--bg:#0b1020;--panel:#111a2e;--panel2:#0e1729;--line:#26344d;--text:#e8eefc;--muted:#9aa9c3;--blue:#6d8cff;--green:#38d9a9}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#18284a 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}
@@ -15,9 +15,9 @@ select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background
 </style>
 </head>
 <body>
-<header><div class="brand"><div class="logo">&lt;/&gt;</div><span>Code<em>Run</em> Studio</span></div><div class="status"><span class="dot"></span> Editor ready</div></header>
+<header><div class="brand"><div class="logo">AK</div><span>AK<em>Hosting</em></span></div><div class="status"><span class="dot"></span> App & Website Platform</div></header>
 <main>
-<section class="hero"><div><div class="eyebrow">Your browser-based playground</div><h1>Build. Run. <span style="color:#91a8ff">Create.</span></h1><p>Write code, test ideas, and see what happens — all in one place.</p></div><div class="pill">✦ Free online editor</div></section>
+<section class="hero"><div><div class="eyebrow">AK HOSTING PLATFORM</div><h1>Launch. Run. <span style="color:#91a8ff">Grow.</span></h1><p>Run your code, preview your website, and prepare app builds in one place.</p></div><div class="pill">✦ Powered by .akhosting branding</div></section>
 <section class="workspace">
 <div class="card">
 <div class="bar"><strong>⌘ &nbsp; CODE EDITOR</strong><div class="controls"><select id="language" aria-label="Choose language"><option value="web">HTML + CSS + JS</option><option value="python">Python</option><option value="javascript">JavaScript (Node.js)</option><option value="c">C</option><option value="c++">C++</option><option value="java">Java</option><option value="php">PHP</option><option value="go">Go</option><option value="rust">Rust</option><option value="ruby">Ruby</option><option value="bash">Bash</option></select><button class="subtle" id="reset">Reset</button></div></div>
@@ -30,7 +30,7 @@ select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background
 </div>
 </section>
 <section class="features"><div class="feature"><span class="icon">⚡</span><b>Instant browser preview</b><p>Test HTML, CSS and JavaScript without installing software.</p></div><div class="feature"><span class="icon">⌘</span><b>Multi-language workspace</b><p>Python and compiled-language options in one clean editor.</p></div><div class="feature"><span class="icon">🔒</span><b>Execution safety</b><p>Remote language runs require a sandboxed execution service; never run unknown code on your own server.</p></div></section>
-<footer>CodeRun Studio · Made for curious minds</footer>
+<footer>© <span id="year"></span> AK Hosting · App & Website Hosting Platform</footer>
 </main>
 <script>
 const samples={
@@ -61,6 +61,6 @@ document.getElementById('reset').addEventListener('click',()=>{code.value=sample
 document.getElementById('clear').addEventListener('click',()=>showOutput('Console cleared.'));
 document.getElementById('download').addEventListener('click',()=>{const ext={web:'html',python:'py',javascript:'js',c:'c','c++':'cpp',java:'java',php:'php',go:'go',rust:'rs',ruby:'rb',bash:'sh'}[selected()]||'txt';const blob=new Blob([code.value],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='main.'+ext;a.click();URL.revokeObjectURL(a.href)});
 code.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const a=code.selectionStart,b=code.selectionEnd;code.setRangeText('  ',a,b,'end')}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runCode()}});
-code.value=samples.web;refreshMode();preview.srcdoc=code.value;
+document.getElementById('year').textContent=new Date().getFullYear();code.value=samples.web;refreshMode();preview.srcdoc=code.value;
 </script>
 </body></html>
