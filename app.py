@@ -231,7 +231,7 @@ def import_github():
     data = request.get_json(silent=True) or {}
     repo_url = str(data.get("repo_url", "")).strip()
     branch = str(data.get("branch", "main")).strip()
-    match = re.fullmatch(r"https?://github\\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\\.git)?/?", repo_url)
+    match = re.fullmatch(r"https?://github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?/?", repo_url)
     if not match:
         return jsonify({"error": "Enter a public GitHub repository URL, for example https://github.com/owner/repo"}), 400
     owner, repo = match.group(1), match.group(2)
