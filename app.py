@@ -9,7 +9,7 @@ from pathlib import Path, PurePosixPath
 
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, jsonify, render_template, request, send_file, send_from_directory, abort, session
+from flask import Flask, jsonify, render_template, request, send_file, send_from_directory, abort, session, redirect, url_for
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 12 * 1024 * 1024
@@ -49,7 +49,17 @@ ALLOWED_EXTS = {".html", ".htm", ".css", ".js", ".mjs", ".json", ".txt", ".svg",
 
 @app.get("/")
 def home():
-    return render_template("index.html", user=current_user())
+    return render_template("index.html", user=current_user(), dashboard_mode=False)
+
+@app.get("/account")
+def account_page():
+    return render_template("auth.html")
+
+@app.get("/dashboard")
+def dashboard_page():
+    if not current_user():
+        return redirect(url_for("account_page"))
+    return render_template("index.html", user=current_user(), dashboard_mode=True)
 
 @app.get("/api/me")
 def api_me():
