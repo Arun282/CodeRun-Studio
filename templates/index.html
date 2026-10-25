@@ -59,8 +59,8 @@ footer{border-top:1px solid #ffffff0c;margin-top:35px;padding:24px 0;color:#7281
 
 </style>
 </head>
-<body>
-<header><a class="brand" href="/" style="text-decoration:none;color:inherit"><div class="logo">AK</div><span>AK<em>Hosting</em></span></a><nav class="mainnav" aria-label="Main navigation"><a href="#platform">Platform</a><a href="#workspace">Code Studio</a><a href="#hosting">Deploy</a></nav><div class="header-right"><div class="status"><span class="dot"></span> All systems ready</div><nav class="topnav" aria-label="Account navigation"><a class="nav-link login" href="#account" data-auth-target="login">Log in</a><a class="nav-link signup" href="#account" data-auth-target="signup">Get started <span aria-hidden="true" style="margin-left:7px">↗</span></a></nav></div></header>
+<body data-dashboard-mode="{{ 'true' if dashboard_mode else 'false' }}">
+<header><a class="brand" href="/" style="text-decoration:none;color:inherit"><div class="logo">AK</div><span>AK<em>Hosting</em></span></a><nav class="mainnav" aria-label="Main navigation"><a href="#platform">Platform</a><a href="#workspace">Code Studio</a><a href="#hosting">Deploy</a></nav><div class="header-right"><div class="status"><span class="dot"></span> All systems ready</div><nav class="topnav" aria-label="Account navigation"><a class="nav-link login" href="/account?mode=login">Log in</a><a class="nav-link signup" href="/account?mode=signup">Get started <span aria-hidden="true" style="margin-left:7px">↗</span></a></nav></div></header>
 <main>
 <section class="hero premium-hero" id="platform"><div class="hero-copy"><div class="eyebrow"><span class="eyebrow-dot"></span> THE NEXT-GEN DEVELOPER PLATFORM</div><h1>Your ideas.<br><span class="gradient-text">Live on the internet.</span></h1><p>Build in your browser, deploy your website, and turn projects into apps — all from one powerful workspace.</p><div class="hero-actions"><a class="hero-cta" href="#workspace">Explore Code Studio <span>↘</span></a><a class="hero-secondary" href="#hosting">Deploy a website</a></div><div class="trustline"><span class="trust-avatars">✦</span> <span>One workspace. Your next big thing.</span><span class="trust-sep">·</span><span class="live-indicator"></span><span>Built for creators</span></div></div><div class="hero-visual" aria-label="AK Hosting platform preview"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="visual-window"><div class="visual-top"><div class="window-dots"><i></i><i></i><i></i></div><span>akhosting / workspace</span><span class="visual-live">● LIVE</span></div><div class="visual-content"><div class="visual-sidebar"><b>AK</b><span class="side-active">⌘</span><span>▦</span><span>↗</span><span>⚙</span></div><div class="visual-code"><div class="code-caption">YOUR NEXT PROJECT <span>•••</span></div><div class="code-line"><i>01</i><span class="code-purple">const</span> <span class="code-blue">dream</span> = <span class="code-green">"build something great"</span>;</div><div class="code-line"><i>02</i><span class="code-purple">await</span> deploy(dream);</div><div class="code-line"><i>03</i><span class="code-comment">// your idea, online</span></div><div class="deploy-card"><span class="deploy-icon">↗</span><div><b>Deployment successful</b><small>Your project is ready to launch</small></div><span class="deploy-check">✓</span></div></div></div><div class="visual-bottom"><span><span class="live-indicator"></span> Environment ready</span><span>AK Hosting Cloud ↗</span></div></div><div class="floating-chip chip-top">✦ <span>Build faster</span></div><div class="floating-chip chip-bottom"><span class="chip-icon">↗</span><div><b>Ready to launch</b><small>From code to live site</small></div></div></div></section>
 <section class="quick-stats"><div><b>01</b><span>Write & preview code</span></div><div><b>02</b><span>Deploy a website</span></div><div><b>03</b><span>Import from GitHub</span></div><div><b>04</b><span>Prepare Android apps</span></div></section>
@@ -190,6 +190,17 @@ document.getElementById('clear').addEventListener('click',()=>showOutput('Consol
 document.getElementById('download').addEventListener('click',()=>{const ext={web:'html',python:'py',javascript:'js',c:'c','c++':'cpp',java:'java',php:'php',go:'go',rust:'rs',ruby:'rb',bash:'sh'}[selected()]||'txt';const blob=new Blob([code.value],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='main.'+ext;a.click();URL.revokeObjectURL(a.href)});
 code.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const a=code.selectionStart,b=code.selectionEnd;code.setRangeText('  ',a,b,'end')}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runCode()}});
 document.getElementById('year').textContent=new Date().getFullYear();
+if(document.body.dataset.dashboardMode==='true'){
+ document.querySelector('.premium-hero')?.remove();
+ document.querySelector('.quick-stats')?.remove();
+ document.querySelector('.section-heading')?.remove();
+ document.querySelector('.features')?.remove();
+ const accountPanel=document.getElementById('account');
+ const workspacePanel=document.querySelector('.workspace');
+ if(accountPanel && workspacePanel) workspacePanel.before(accountPanel);
+ const title=document.createElement('div');title.className='hero';title.innerHTML='<div><div class="eyebrow">CUSTOMER WORKSPACE</div><h1>Welcome to your dashboard</h1><p>Manage your account, websites, code studio and Android project tools.</p></div><a class="nav-link login" href="/" style="text-decoration:none">← Home</a>';
+ document.querySelector('main').prepend(title);
+}
 
 let hostedSiteId = null;
 let currentProjects = [];
