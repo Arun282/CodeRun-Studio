@@ -6,18 +6,65 @@
 <style>
 :root{--bg:#0b1020;--panel:#111a2e;--panel2:#0e1729;--line:#26344d;--text:#e8eefc;--muted:#9aa9c3;--blue:#6d8cff;--green:#38d9a9}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#18284a 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}
-header{height:74px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 4%;background:#0b1020ee;position:sticky;top:0;z-index:10;backdrop-filter:blur(16px)}\n.header-right{display:flex;align-items:center;gap:12px}.topnav{display:flex;align-items:center;gap:9px}.nav-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:10px;padding:10px 15px;font-size:13px;font-weight:750;border:1px solid #34435f;color:#e8eefc;background:#121d32;transition:.18s}.nav-link:hover{border-color:#748fff;transform:translateY(-1px)}.nav-link.signup{background:linear-gradient(120deg,#6484ff,#8c68f4);border-color:transparent;color:white;box-shadow:0 7px 22px #6484ff35}.nav-link.login{background:transparent}.nav-link:focus-visible{outline:2px solid #9eb0ff;outline-offset:3px}
+header{height:74px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 4%;background:#0b1020ee;position:sticky;top:0;z-index:10;backdrop-filter:blur(16px)}
+.header-right{display:flex;align-items:center;gap:12px}.topnav{display:flex;align-items:center;gap:9px}.nav-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:10px;padding:10px 15px;font-size:13px;font-weight:750;border:1px solid #34435f;color:#e8eefc;background:#121d32;transition:.18s}.nav-link:hover{border-color:#748fff;transform:translateY(-1px)}.nav-link.signup{background:linear-gradient(120deg,#6484ff,#8c68f4);border-color:transparent;color:white;box-shadow:0 7px 22px #6484ff35}.nav-link.login{background:transparent}.nav-link:focus-visible{outline:2px solid #9eb0ff;outline-offset:3px}
 .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:19px;letter-spacing:-.5px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#6686ff,#9b67f6);font-size:19px}.brand span em{font-style:normal;color:#8fa8ff}.status{font-size:12px;color:var(--green);display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;background:var(--green);border-radius:50%}
 main{max-width:1450px;margin:auto;padding:30px 24px 45px}.hero{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}.eyebrow{font-size:11px;color:#9eb0ff;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(25px,4vw,38px);letter-spacing:-1.3px;margin:5px 0}.hero p{color:var(--muted);margin:0}.pill{border:1px solid #344464;border-radius:99px;padding:8px 13px;color:#c8d4ed;font-size:12px;white-space:nowrap}
 .workspace{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:17px}.card{background:linear-gradient(180deg,#111b30,#0e1729);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 18px 50px #0002;min-width:0}.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);background:#ffffff03}.bar strong{font-size:13px}.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background:#16223a;color:var(--text);padding:9px 11px}select{max-width:180px}button{cursor:pointer;font-weight:700;font-size:12px;transition:.15s}button:hover{filter:brightness(1.15);transform:translateY(-1px)}.primary{background:linear-gradient(120deg,#6484ff,#8c68f4);border:0;color:white;padding:10px 17px}.subtle{background:transparent;color:#c4cee1}.editorarea{padding:14px}textarea{width:100%;height:390px;resize:vertical;background:#091120;color:#dce7ff;border:1px solid #24344f;border-radius:11px;padding:16px;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none;tab-size:2}textarea:focus{border-color:#718dff;box-shadow:0 0 0 3px #718dff20}.hint{color:var(--muted);font-size:11px;margin:9px 2px 0}.rightcol{display:flex;flex-direction:column;gap:17px}.previewcard{flex:1;min-height:275px}.previewframe{height:280px;background:#fff}.previewframe iframe{width:100%;height:100%;border:0;background:white}.output{min-height:165px;max-height:310px;overflow:auto;background:#080f1c;padding:14px 16px;color:#c6f6df;font:12px/1.7 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.output .placeholder{color:#72829d}.inputbox{width:100%;height:76px;resize:vertical;background:#091120;color:#dce7ff;border:1px solid #24344f;border-radius:9px;padding:10px;font:12px ui-monospace,monospace}.inputwrap{padding:0 14px 14px}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.feature{padding:15px;border:1px solid var(--line);border-radius:13px;background:#ffffff03}.feature b{display:block;font-size:13px;margin:5px 0}.feature p{color:var(--muted);font-size:12px;margin:0}.icon{font-size:19px}footer{text-align:center;color:#71809b;font-size:11px;padding:26px 0 0}.toast{color:#ffc977;font-size:12px;padding:10px 15px;display:none}
-@media(max-width:850px){.workspace{grid-template-columns:1fr}.hero{align-items:start;flex-direction:column}textarea{height:330px}.previewframe{height:250px}.features{grid-template-columns:1fr}.status{display:none}header{padding:0 13px;height:66px}.brand{font-size:17px;gap:8px}.logo{width:34px;height:34px}.header-right{gap:8px}.topnav{gap:6px}.nav-link{padding:9px 10px;font-size:12px}.status{display:none}main{padding:23px 13px}.pill{white-space:normal}}\n@media(max-width:380px){.nav-link{padding:8px 9px;font-size:11px}.brand{font-size:15px}.logo{width:31px;height:31px}}
+@media(max-width:850px){.workspace{grid-template-columns:1fr}.hero{align-items:start;flex-direction:column}textarea{height:330px}.previewframe{height:250px}.features{grid-template-columns:1fr}.status{display:none}header{padding:0 13px;height:66px}.brand{font-size:17px;gap:8px}.logo{width:34px;height:34px}.header-right{gap:8px}.topnav{gap:6px}.nav-link{padding:9px 10px;font-size:12px}.status{display:none}main{padding:23px 13px}.pill{white-space:normal}}
+@media(max-width:380px){.nav-link{padding:8px 9px;font-size:11px}.brand{font-size:15px}.logo{width:31px;height:31px}}
+
+/* Premium futuristic AK Hosting visual system */
+:root{--bg:#070b16;--panel:#0d1425;--panel2:#0a1020;--line:#222d45;--text:#f1f5ff;--muted:#98a7c2;--blue:#7c8dff;--green:#42e5bd}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:radial-gradient(ellipse at 8% -5%,#25366a 0,transparent 32%),radial-gradient(ellipse at 88% 18%,#24184c 0,transparent 28%),#070b16;letter-spacing:.01em}
+header{border-bottom:1px solid #ffffff12;background:#080d19d9;box-shadow:0 8px 40px #0002}
+.brand{font-size:20px}.logo{box-shadow:0 5px 24px #7b6bff45;border:1px solid #ffffff28}
+.mainnav{display:flex;align-items:center;gap:25px;margin-left:auto;margin-right:24px}.mainnav a{font-size:12px;color:#aab7d0;text-decoration:none;font-weight:650;transition:color .2s}.mainnav a:hover{color:#fff}
+.header-right{gap:15px}.nav-link{border-radius:11px;padding:10px 16px}.nav-link.signup{box-shadow:0 5px 25px #7567ff3b}
+main{max-width:1320px;padding-top:26px}
+.premium-hero{min-height:455px;align-items:center;display:grid;grid-template-columns:1.03fr .97fr;gap:32px;padding:34px 0 36px;margin-bottom:10px}
+.hero-copy{position:relative;z-index:1}.eyebrow{display:flex;align-items:center;gap:9px;color:#a8b5ff;letter-spacing:2.4px;font-size:10px}
+.eyebrow-dot{width:7px;height:7px;border-radius:50%;background:#7d8dff;box-shadow:0 0 14px #7d8dff}
+.premium-hero h1{font-size:clamp(39px,5.2vw,66px);line-height:1.07;letter-spacing:-2.8px;margin:19px 0 18px;font-weight:800}
+.gradient-text{background:linear-gradient(100deg,#d8dcff 0%,#9ca8ff 42%,#c69cff 78%,#81dfff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.premium-hero p{max-width:510px;font-size:15px;line-height:1.85;color:#a6b2ca}
+.hero-actions{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:27px}
+.hero-cta,.hero-secondary{display:inline-flex;align-items:center;justify-content:center;gap:20px;text-decoration:none;border-radius:12px;padding:13px 18px;font-size:12px;font-weight:750;transition:transform .2s,box-shadow .2s}
+.hero-cta{background:linear-gradient(110deg,#7287ff,#9568f5);color:#fff;box-shadow:0 10px 28px #7668ff40}.hero-cta:hover{transform:translateY(-2px);box-shadow:0 14px 32px #7668ff55}.hero-cta span{font-size:17px}
+.hero-secondary{border:1px solid #ffffff20;color:#d8e1f6;background:#ffffff04}.hero-secondary:hover{border-color:#929fff;transform:translateY(-2px)}
+.trustline{display:flex;align-items:center;gap:9px;margin-top:26px;color:#8796b1;font-size:11px;flex-wrap:wrap}.trust-avatars{display:grid;place-items:center;width:24px;height:24px;border:1px solid #a39aff60;background:#a39aff15;border-radius:50%;color:#c7c0ff}.trust-sep{color:#586780}
+.live-indicator{display:inline-block;width:6px;height:6px;background:#43e3b5;border-radius:50%;box-shadow:0 0 12px #43e3b577}
+.hero-visual{position:relative;min-height:340px;display:grid;place-items:center;isolation:isolate}.hero-visual:before{content:"";position:absolute;width:82%;height:76%;background:linear-gradient(135deg,#687aff22,#b36bff20);filter:blur(44px);border-radius:50%;z-index:-2}
+.orb{position:absolute;border-radius:50%;filter:blur(1px);z-index:-1}.orb-one{width:260px;height:260px;right:5%;top:1%;border:1px solid #9b91ff24;box-shadow:inset 0 0 50px #8c7bff0c,0 0 65px #8174ff0a}.orb-two{width:170px;height:170px;left:0;bottom:2%;border:1px solid #73d8ff25}
+.visual-window{width:min(100%,470px);border:1px solid #8b9dff3a;border-radius:17px;background:linear-gradient(145deg,#131d34f5,#0a1020f5);box-shadow:0 28px 90px #0008,0 0 0 6px #ffffff03;overflow:hidden;transform:perspective(1000px) rotateY(-5deg) rotateX(2deg)}
+.visual-top{height:43px;display:flex;align-items:center;gap:12px;padding:0 14px;border-bottom:1px solid #ffffff10;color:#8191ad;font:10px ui-monospace,monospace}.window-dots{display:flex;gap:5px}.window-dots i{width:6px;height:6px;border-radius:50%;background:#f17e93}.window-dots i:nth-child(2){background:#edc76f}.window-dots i:nth-child(3){background:#4bd8ae}.visual-live{margin-left:auto;color:#50e5bd;font-size:9px}
+.visual-content{display:grid;grid-template-columns:42px 1fr;min-height:225px}.visual-sidebar{display:flex;flex-direction:column;align-items:center;gap:17px;padding:14px 0;border-right:1px solid #ffffff0d;color:#6e7e9c;font-size:13px}.visual-sidebar b{color:#a6afff;font-size:11px;margin-bottom:8px}.side-active{color:#c6c6ff;background:#7f81ff23;border-radius:7px;padding:6px 9px}
+.visual-code{padding:20px 17px;font:11px/2 ui-monospace,SFMono-Regular,monospace;color:#d7e0f6;overflow:hidden}.code-caption{font:9px system-ui,sans-serif;letter-spacing:1.4px;color:#7484a5;margin-bottom:16px}.code-caption span{float:right}.code-line{white-space:nowrap}.code-line i{font-style:normal;color:#53617e;margin-right:13px}.code-purple{color:#c49bff}.code-blue{color:#88baff}.code-green{color:#83e4c0}.code-comment{color:#667894}
+.deploy-card{display:flex;align-items:center;gap:10px;padding:12px;margin-top:22px;border:1px solid #55dcb733;border-radius:11px;background:linear-gradient(100deg,#45dfb00c,#8d79ff0b)}.deploy-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#49dcb51b;color:#6be8c7;font-size:16px}.deploy-card b{display:block;font:650 10px system-ui;color:#dce9ff}.deploy-card small{display:block;color:#8291aa;font:9px system-ui;margin-top:3px}.deploy-check{margin-left:auto;color:#54e2b8;font-size:16px}
+.visual-bottom{display:flex;justify-content:space-between;gap:10px;padding:11px 14px;border-top:1px solid #ffffff10;color:#8290aa;font-size:9px}
+.floating-chip{position:absolute;display:flex;align-items:center;gap:9px;border:1px solid #ffffff20;background:#111a2beF;backdrop-filter:blur(12px);border-radius:12px;padding:10px 13px;box-shadow:0 14px 36px #0005;font-size:11px;color:#cfd9f3}.chip-top{right:-3px;top:19px;color:#c8baff}.chip-top span{color:#d9e1f6}.chip-bottom{left:-9px;bottom:18px}.chip-icon{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#7e81ff22;color:#a6a9ff;font-size:17px}.chip-bottom b,.chip-bottom small{display:block}.chip-bottom b{font-size:10px}.chip-bottom small{font-size:9px;color:#8797b3;margin-top:2px}
+.quick-stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #ffffff13;border-radius:15px;background:linear-gradient(100deg,#ffffff05,#8b8dff08);margin:5px 0 55px;overflow:hidden}
+.quick-stats div{display:flex;align-items:center;gap:12px;padding:18px 20px;border-right:1px solid #ffffff10}.quick-stats div:last-child{border-right:0}.quick-stats b{font-size:10px;color:#9da8ff;letter-spacing:1px}.quick-stats span{font-size:11px;color:#b5c0d5}
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:0 0 20px}.section-heading h2{font-size:clamp(25px,3vw,36px);letter-spacing:-1.1px;margin:9px 0}.section-heading p{color:#96a5c0;font-size:13px;margin:0}.section-tag{font-size:9px;letter-spacing:1.4px;color:#9aa8c6;border:1px solid #ffffff16;border-radius:30px;padding:9px 12px;white-space:nowrap}
+.workspace{gap:18px}.card{border-color:#26324b;background:linear-gradient(150deg,#10192b,#0b1221);border-radius:17px;box-shadow:0 20px 60px #0002;transition:border-color .2s,transform .2s}.card:hover{border-color:#596aa45c}.bar{padding:15px 17px;border-bottom-color:#ffffff10}.bar strong{letter-spacing:.5px;font-size:11px}.editorarea{padding:16px}textarea{border-color:#25324b;background:#080e1b}.previewframe{background:#f8faff}.features{gap:14px;margin-top:20px}.feature{position:relative;border:1px solid #ffffff12;border-radius:15px;padding:19px;background:linear-gradient(145deg,#ffffff05,#ffffff01);transition:transform .2s,border-color .2s,background .2s}.feature:hover{transform:translateY(-3px);border-color:#8990ff55;background:linear-gradient(145deg,#8b8cff0d,#ffffff02)}.feature .icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#8c8aff18;border:1px solid #aaa6ff20}.feature b{font-size:13px;margin:12px 0 6px}.feature p{font-size:11px;line-height:1.7}.feature-arrow{position:absolute;right:16px;top:17px;color:#7889ff;font-size:16px}
+#account,#hosting{scroll-margin-top:92px}#account,#hosting{box-shadow:0 22px 70px #0003}
+input,select,button,.inputbox{transition:border-color .2s,box-shadow .2s}input:focus,select:focus,button:focus-visible{outline:none;border-color:#8391ff!important;box-shadow:0 0 0 3px #7f88ff20}
+footer{border-top:1px solid #ffffff0c;margin-top:35px;padding:24px 0;color:#72819d}
+@media(max-width:1000px){.mainnav{gap:14px;margin-right:12px}.premium-hero{gap:16px}.chip-top{right:0}.chip-bottom{left:0}.quick-stats div{padding:15px 12px}}
+@media(max-width:850px){.mainnav{display:none}.premium-hero{display:grid;grid-template-columns:1fr;gap:10px;padding:32px 0 24px}.premium-hero h1{font-size:clamp(39px,8vw,58px)}.hero-visual{min-height:330px;margin:0 6px}.visual-window{transform:none}.chip-top{right:-2px;top:5px}.chip-bottom{left:-3px;bottom:7px}.quick-stats{grid-template-columns:repeat(2,1fr);margin-bottom:42px}.quick-stats div:nth-child(2){border-right:0}.quick-stats div:nth-child(-n+2){border-bottom:1px solid #ffffff10}.section-heading{align-items:start;flex-direction:column}.section-tag{white-space:normal}.workspace{grid-template-columns:1fr}}
+@media(max-width:480px){header{padding:0 11px}.brand{font-size:16px}.header-right{gap:6px}.nav-link{padding:9px 10px;font-size:11px}.premium-hero h1{letter-spacing:-1.8px}.premium-hero p{font-size:13px}.hero-visual{min-height:290px}.visual-content{min-height:205px}.visual-code{padding:17px 10px;font-size:9px}.visual-code .code-line i{margin-right:7px}.deploy-card{padding:9px;margin-top:14px}.floating-chip{padding:8px 10px}.quick-stats div{align-items:flex-start;flex-direction:column;gap:5px;padding:13px}.quick-stats span{font-size:10px}.features{grid-template-columns:1fr}.hero-actions{gap:9px}.hero-cta,.hero-secondary{padding:12px 13px}.visual-bottom{font-size:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
 </style>
 </head>
 <body>
-<header><a class="brand" href="/" style="text-decoration:none;color:inherit"><div class="logo">AK</div><span>AK<em>Hosting</em></span></a><div class="header-right"><div class="status"><span class="dot"></span> App & Website Platform</div><nav class="topnav" aria-label="Account navigation"><a class="nav-link login" href="#account" data-auth-target="login">Log in</a><a class="nav-link signup" href="#account" data-auth-target="signup">Sign up <span aria-hidden="true" style="margin-left:7px">↗</span></a></nav></div></header>
+<header><a class="brand" href="/" style="text-decoration:none;color:inherit"><div class="logo">AK</div><span>AK<em>Hosting</em></span></a><nav class="mainnav" aria-label="Main navigation"><a href="#platform">Platform</a><a href="#workspace">Code Studio</a><a href="#hosting">Deploy</a></nav><div class="header-right"><div class="status"><span class="dot"></span> All systems ready</div><nav class="topnav" aria-label="Account navigation"><a class="nav-link login" href="#account" data-auth-target="login">Log in</a><a class="nav-link signup" href="#account" data-auth-target="signup">Get started <span aria-hidden="true" style="margin-left:7px">↗</span></a></nav></div></header>
 <main>
-<section class="hero"><div><div class="eyebrow">AK HOSTING PLATFORM</div><h1>Launch. Run. <span style="color:#91a8ff">Grow.</span></h1><p>Run your code, preview your website, and prepare app builds in one place.</p></div><div class="pill">✦ Powered by .akhosting branding</div></section>
+<section class="hero premium-hero" id="platform"><div class="hero-copy"><div class="eyebrow"><span class="eyebrow-dot"></span> THE NEXT-GEN DEVELOPER PLATFORM</div><h1>Your ideas.<br><span class="gradient-text">Live on the internet.</span></h1><p>Build in your browser, deploy your website, and turn projects into apps — all from one powerful workspace.</p><div class="hero-actions"><a class="hero-cta" href="#workspace">Explore Code Studio <span>↘</span></a><a class="hero-secondary" href="#hosting">Deploy a website</a></div><div class="trustline"><span class="trust-avatars">✦</span> <span>One workspace. Your next big thing.</span><span class="trust-sep">·</span><span class="live-indicator"></span><span>Built for creators</span></div></div><div class="hero-visual" aria-label="AK Hosting platform preview"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="visual-window"><div class="visual-top"><div class="window-dots"><i></i><i></i><i></i></div><span>akhosting / workspace</span><span class="visual-live">● LIVE</span></div><div class="visual-content"><div class="visual-sidebar"><b>AK</b><span class="side-active">⌘</span><span>▦</span><span>↗</span><span>⚙</span></div><div class="visual-code"><div class="code-caption">YOUR NEXT PROJECT <span>•••</span></div><div class="code-line"><i>01</i><span class="code-purple">const</span> <span class="code-blue">dream</span> = <span class="code-green">"build something great"</span>;</div><div class="code-line"><i>02</i><span class="code-purple">await</span> deploy(dream);</div><div class="code-line"><i>03</i><span class="code-comment">// your idea, online</span></div><div class="deploy-card"><span class="deploy-icon">↗</span><div><b>Deployment successful</b><small>Your project is ready to launch</small></div><span class="deploy-check">✓</span></div></div></div><div class="visual-bottom"><span><span class="live-indicator"></span> Environment ready</span><span>AK Hosting Cloud ↗</span></div></div><div class="floating-chip chip-top">✦ <span>Build faster</span></div><div class="floating-chip chip-bottom"><span class="chip-icon">↗</span><div><b>Ready to launch</b><small>From code to live site</small></div></div></div></section>
+<section class="quick-stats"><div><b>01</b><span>Write & preview code</span></div><div><b>02</b><span>Deploy a website</span></div><div><b>03</b><span>Import from GitHub</span></div><div><b>04</b><span>Prepare Android apps</span></div></section>
+<section class="section-heading" id="workspace"><div><div class="eyebrow">YOUR CREATIVE WORKSPACE</div><h2>Everything you need to <span class="gradient-text">build & ship.</span></h2><p>From your first line of code to a website people can visit.</p></div><span class="section-tag">✦ ONE PLATFORM, MORE POSSIBILITIES</span></section>
 <section class="workspace">
 <div class="card">
 <div class="bar"><strong>⌘ &nbsp; CODE EDITOR</strong><div class="controls"><select id="language" aria-label="Choose language"><option value="web">HTML + CSS + JS</option><option value="python">Python</option><option value="javascript">JavaScript (Node.js)</option><option value="c">C</option><option value="c++">C++</option><option value="java">Java</option><option value="php">PHP</option><option value="go">Go</option><option value="rust">Rust</option><option value="ruby">Ruby</option><option value="bash">Bash</option></select><button class="subtle" id="reset">Reset</button></div></div>
@@ -29,7 +76,7 @@ select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background
 <div class="card"><div class="bar"><strong>⌁ &nbsp; OUTPUT CONSOLE</strong><button class="subtle" id="clear">Clear</button></div><div id="output" class="output"><span class="placeholder">Your program output will appear here…</span></div><div class="inputwrap" id="stdinwrap" hidden><label for="stdin" style="font-size:11px;color:var(--muted);display:block;margin-bottom:7px">Standard input (stdin)</label><textarea id="stdin" class="inputbox" placeholder="Optional input for your program"></textarea></div></div>
 </div>
 </section>
-<section class="features"><div class="feature"><span class="icon">⚡</span><b>Instant browser preview</b><p>Test HTML, CSS and JavaScript without installing software.</p></div><div class="feature"><span class="icon">⌘</span><b>Multi-language workspace</b><p>Python and compiled-language options in one clean editor.</p></div><div class="feature"><span class="icon">🔒</span><b>Execution safety</b><p>Remote language runs require a sandboxed execution service; never run unknown code on your own server.</p></div></section>
+<section class="features"><div class="feature"><span class="icon">⚡</span><b>Instant browser preview</b><p>Test HTML, CSS and JavaScript directly in your browser.</p><span class="feature-arrow">↗</span></div><div class="feature"><span class="icon">⌘</span><b>Multi-language workspace</b><p>Write and run code in a focused, modern editor.</p><span class="feature-arrow">↗</span></div><div class="feature"><span class="icon">🔒</span><b>Built with safety in mind</b><p>Remote code execution uses a separate sandbox service.</p><span class="feature-arrow">↗</span></div></section>
 
 <section class="card" id="account" style="margin-top:20px">
  <div class="bar"><strong>👤 &nbsp; CUSTOMER ACCOUNT</strong><span id="accountState" style="font-size:11px;color:var(--muted)">Sign in to manage your projects</span></div>
@@ -75,15 +122,48 @@ select,button{font:inherit;border-radius:9px;border:1px solid #34435f;background
 </main>
 <script>
 const samples={
-web:'<!doctype html>\n<html>\n<head>\n<style>body{font-family:Arial;padding:24px;color:#172033}h1{color:#5b6ee1}button{padding:10px 16px;border:0;border-radius:8px;background:#5b6ee1;color:white;cursor:pointer}</style>\n</head>\n<body>\n<h1>Hello, CodeRun! 👋</h1>\n<p>Edit this HTML, CSS and JavaScript, then click Run Code.</p>\n<button onclick="document.querySelector(\'p\').textContent=\'It works! JavaScript is running.\'">Click me</button>\n</body>\n</html>',
-python:'print("Hello, CodeRun Studio!")\nname = "Developer"\nprint(f"Welcome, {name}!")\nprint(2 + 3)',
-javascript:'console.log("Hello, CodeRun Studio!");\nconsole.log("2 + 3 =", 2 + 3);',
-c:'#include <stdio.h>\nint main(void) {\n    printf("Hello, CodeRun Studio!\\n");\n    return 0;\n}',
-'c++':'#include <iostream>\nint main() {\n    std::cout << "Hello, CodeRun Studio!" << std::endl;\n    return 0;\n}',
-java:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, CodeRun Studio!");\n    }\n}',
-php:'<?php\necho "Hello, CodeRun Studio!";\n?>',
-go:'package main\nimport "fmt"\nfunc main() { fmt.Println("Hello, CodeRun Studio!") }',
-rust:'fn main() {\n    println!("Hello, CodeRun Studio!");\n}',
+web:'<!doctype html>
+<html>
+<head>
+<style>body{font-family:Arial;padding:24px;color:#172033}h1{color:#5b6ee1}button{padding:10px 16px;border:0;border-radius:8px;background:#5b6ee1;color:white;cursor:pointer}</style>
+</head>
+<body>
+<h1>Hello, CodeRun! 👋</h1>
+<p>Edit this HTML, CSS and JavaScript, then click Run Code.</p>
+<button onclick="document.querySelector(\'p\').textContent=\'It works! JavaScript is running.\'">Click me</button>
+</body>
+</html>',
+python:'print("Hello, CodeRun Studio!")
+name = "Developer"
+print(f"Welcome, {name}!")
+print(2 + 3)',
+javascript:'console.log("Hello, CodeRun Studio!");
+console.log("2 + 3 =", 2 + 3);',
+c:'#include <stdio.h>
+int main(void) {
+    printf("Hello, CodeRun Studio!\
+");
+    return 0;
+}',
+'c++':'#include <iostream>
+int main() {
+    std::cout << "Hello, CodeRun Studio!" << std::endl;
+    return 0;
+}',
+java:'public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, CodeRun Studio!");
+    }
+}',
+php:'<?php
+echo "Hello, CodeRun Studio!";
+?>',
+go:'package main
+import "fmt"
+func main() { fmt.Println("Hello, CodeRun Studio!") }',
+rust:'fn main() {
+    println!("Hello, CodeRun Studio!");
+}',
 ruby:'puts "Hello, CodeRun Studio!"',
 bash:'echo "Hello, CodeRun Studio!"'
 };
@@ -95,8 +175,15 @@ lang.addEventListener('change',()=>{code.value=samples[selected()]||'';refreshMo
 document.getElementById('run').addEventListener('click',runCode);
 async function runCode(){const l=selected(),src=code.value;document.getElementById('run').disabled=true;document.getElementById('run').textContent='Running…';try{
 if(l==='web'){const doc=src;preview.srcdoc=doc;showOutput('Preview updated. (Browser console output is not captured here.)');return;}
-if(l==='python'){showOutput('Loading Python runtime…');if(!window.loadPyodide){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js';s.onload=resolve;s.onerror=()=>reject(new Error('Could not load Python runtime. Check your internet connection.'));document.head.appendChild(s)});}window.pyodideInstance=window.pyodideInstance||await loadPyodide();let output='';window.pyodideInstance.setStdout({batched:s=>output+=s+'\n'});window.pyodideInstance.setStderr({batched:s=>output+=s+'\n'});try{await window.pyodideInstance.runPythonAsync(src);showOutput(output.trim()||'Program finished (no output).')}catch(e){showOutput((output?output+'\n':'')+String(e))}return;}
-showOutput('Sending code to the remote sandbox…');const res=await fetch('/api/execute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({language:l,code:src,stdin:document.getElementById('stdin').value})});const data=await res.json();if(!res.ok){showOutput(data.error||'Execution service error.');return;}let text='';if(data.compile?.output)text+='[Compile]\n'+data.compile.output+'\n';if(data.run?.output)text+=data.run.output;if(data.run?.code!==undefined&&data.run?.code!==null)text+='\n\nExit code: '+data.run.code;if(!text)text=data.message||'Finished (no output).';showOutput(text);
+if(l==='python'){showOutput('Loading Python runtime…');if(!window.loadPyodide){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js';s.onload=resolve;s.onerror=()=>reject(new Error('Could not load Python runtime. Check your internet connection.'));document.head.appendChild(s)});}window.pyodideInstance=window.pyodideInstance||await loadPyodide();let output='';window.pyodideInstance.setStdout({batched:s=>output+=s+'
+'});window.pyodideInstance.setStderr({batched:s=>output+=s+'
+'});try{await window.pyodideInstance.runPythonAsync(src);showOutput(output.trim()||'Program finished (no output).')}catch(e){showOutput((output?output+'
+':'')+String(e))}return;}
+showOutput('Sending code to the remote sandbox…');const res=await fetch('/api/execute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({language:l,code:src,stdin:document.getElementById('stdin').value})});const data=await res.json();if(!res.ok){showOutput(data.error||'Execution service error.');return;}let text='';if(data.compile?.output)text+='[Compile]
+'+data.compile.output+'
+';if(data.run?.output)text+=data.run.output;if(data.run?.code!==undefined&&data.run?.code!==null)text+='
+
+Exit code: '+data.run.code;if(!text)text=data.message||'Finished (no output).';showOutput(text);
 }catch(e){showOutput('Error: '+e.message)}finally{document.getElementById('run').disabled=false;document.getElementById('run').textContent=l==='web'?'▶ Run & Preview':'▶ Run Code';}}
 document.getElementById('reset').addEventListener('click',()=>{code.value=samples[selected()]||'';showOutput('Editor reset to sample code.');if(selected()==='web')preview.srcdoc=code.value});
 document.getElementById('clear').addEventListener('click',()=>showOutput('Console cleared.'));
@@ -154,7 +241,8 @@ async function authSubmit(formId, endpoint, emailId, passwordId){
   catch(err){msg.textContent=err.message;}
  });
 }
-authSubmit('loginForm','/api/login','loginEmail','loginPassword');\ndocument.querySelectorAll('[data-auth-target]').forEach(link=>link.addEventListener('click',()=>{const target=link.dataset.authTarget;window.setTimeout(()=>{const form=document.getElementById(target==='signup'?'registerForm':'loginForm');if(form){const first=form.querySelector('input');if(first)first.focus({preventScroll:true});}},250);}));
+authSubmit('loginForm','/api/login','loginEmail','loginPassword');
+document.querySelectorAll('[data-auth-target]').forEach(link=>link.addEventListener('click',()=>{const target=link.dataset.authTarget;window.setTimeout(()=>{const form=document.getElementById(target==='signup'?'registerForm':'loginForm');if(form){const first=form.querySelector('input');if(first)first.focus({preventScroll:true});}},250);}));
 authSubmit('registerForm','/api/register','registerEmail','registerPassword');
 document.getElementById('logoutBtn').addEventListener('click',async()=>{try{await apiJson('/api/logout',{method:'POST'});await loadAccount();}catch(e){document.getElementById('authMessage').textContent=e.message;}});
 document.getElementById('siteName').addEventListener('input',()=>{const slug=document.getElementById('siteSlug');if(!slug.dataset.edited)slug.value=document.getElementById('siteName').value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);});
